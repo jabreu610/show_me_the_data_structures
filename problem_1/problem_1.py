@@ -27,11 +27,10 @@ class LRU_Cache:
         self.data[key] = value
         self.__used(key)
 
-# Test Case 1
-
 
 def eviction():
     """
+    Test Case 1
     Tests proper eviction of cached data when adding entries at capacity
     """
     cache = LRU_Cache(5)
@@ -43,21 +42,19 @@ def eviction():
     cache.set(7, 7)
     return cache
 
-# Test Case 2
-
 
 def cache_miss():
     """
+    Test Case 2
     Tests retrieving a value from an empty cache ie cache miss
     """
     cache = LRU_Cache(5)
     return cache.get(1)
 
-# Test Case 3
-
 
 def cache_key_collision():
     """
+    Test Case 3
     Tests setting values to existing keys, expected behavior: value should be overwritten and cache entry should be considered "used"
     """
     cache = LRU_Cache(5)
