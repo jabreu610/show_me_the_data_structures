@@ -64,9 +64,10 @@ def cache_key_collision():
     return cache
 
 
-print(eviction())
-# OrderedDict([(5, 5), (1, 1), (3, 3), (6, 6), (7, 7)])
-print(cache_miss())
-# -1
-print(cache_key_collision())
-# OrderedDict([(2, 2), (3, 3), (4, 4), (5, 5), (1, 'I was overwritten')])
+if __name__ == "__main__":
+    print(eviction())
+    # OrderedDict([(5, 5), (1, 1), (3, 3), (6, 6), (7, 7)])
+    print(cache_miss())
+    # -1
+    print(cache_key_collision())
+    # OrderedDict([(2, 2), (3, 3), (4, 4), (5, 5), (1, 'I was overwritten')])

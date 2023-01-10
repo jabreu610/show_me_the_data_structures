@@ -71,9 +71,10 @@ def only_matches_files():
     return len(response) == expected_response_length
 
 
-print(returns_matches())
-# True
-print(no_match())
-# True
-print(only_matches_files())
-# True
+if __name__ == '__main__':
+    print(returns_matches())
+    # True
+    print(no_match())
+    # True
+    print(only_matches_files())
+    # True
