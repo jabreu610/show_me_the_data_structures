@@ -37,12 +37,12 @@ class Node:
         return f"Node(value={self.value}, frequency={self.frequency}, left={left} right={right})"
 
 
-def dfs(node: Node, path=''):
+def generate_cipher_dfs(node: Node, path=''):
     if node.is_leaf_node():
         return [(node.get_label(), path)]
 
-    left_leaves = dfs(node.left, path + '0') if node.left else [None]
-    right_leaves = dfs(node.right, path + '1') if node.right else [None]
+    left_leaves = generate_cipher_dfs(node.left, path + '0') if node.left else [None]
+    right_leaves = generate_cipher_dfs(node.right, path + '1') if node.right else [None]
 
     return [x for x in left_leaves + right_leaves if x]
 
@@ -65,11 +65,11 @@ def huffman_encoding(data):
                  tiebreaker_index, internal_node))
 
     _, _, tree = character_heap[0]
-    leaves = dict(dfs(tree))
+    cipher = dict(generate_cipher_dfs(tree))
 
     encoded = ''
     for char in data:
-        encoded += leaves[char]
+        encoded += cipher[char]
 
     return encoded, tree
 
