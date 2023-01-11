@@ -1,0 +1,7 @@
+{
+    "verbose": true,
+    "ignore": ["**/*.md"],
+    "execMap": {
+        "py": "python3"
+    }
+}
