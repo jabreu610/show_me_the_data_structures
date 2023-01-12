@@ -19,7 +19,8 @@ class Group(object):
     def get_name(self):
         return self.name
 
-def is_user_in_group(user, group):
+
+def is_user_in_group(user, group: Group):
     """
     Return True if user is in the group, False otherwise.
 
@@ -27,17 +28,39 @@ def is_user_in_group(user, group):
       user(str): user name/id
       group(class:Group): group to check user membership against
     """
-    return None
+    if not user:
+        return False
+
+    members = group.get_users()
+    if user in members:
+        return True
+    else:
+        sub_groups = group.get_groups()
+        for nested in sub_groups:
+            if is_user_in_group(user, nested):
+                return True
+
+    return False
 
 
-def correctly_identifies_nested_membership(user: str, group: Group):
-    pass
+def nested_membership(user: str, group: Group):
+    result = is_user_in_group(user, group)
+    return result == True
 
-def correctly_identifies_membership(user: str, group: Group):
-    pass
+
+def membership(user: str, group: Group):
+    result = is_user_in_group(user, group)
+    return result == True
+
+
+def not_a_member(user: str, group: Group):
+    result = is_user_in_group(user, group)
+    return result == False
+
 
 def null_case(user: None, group: Group):
-    pass
+    result = is_user_in_group(user, group)
+    return result == False
 
 
 if __name__ == "__main__":
@@ -50,9 +73,12 @@ if __name__ == "__main__":
 
     child.add_group(sub_child)
     parent.add_group(child)
-    print(correctly_identifies_nested_membership(sub_child_user, parent))
+
+    print(nested_membership(sub_child_user, parent))
     # True
-    print(correctly_identifies_membership(sub_child_user, sub_child))
+    print(membership(sub_child_user, sub_child))
+    # True
+    print(not_a_member('Udacity', parent))
     # True
     print(null_case(None, parent))
     # True
