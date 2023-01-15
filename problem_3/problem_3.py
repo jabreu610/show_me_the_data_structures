@@ -6,7 +6,10 @@ MESSAGE = "AAAAAAABBBCCCCCCCDDEEEEEE"
 ENCODED = "1010101010101000100100111111111111111000000010101010101"
 
 LONG_MESSAGE = "iaculis at erat pellentesque adipiscing commodo elit at imperdiet dui accumsan sit amet nulla facilisi morbi tempus iaculis urna id volutpat lacus laoreet non curabitur gravida arcu ac tortor dignissim"
-DECODED_LONG_MESSAGE = "0010000100101001010010110110000101111010000111000101111011110110000101010110001110010111000011011110000101010001100001001100111110100101100100001111001001011100100111111110111101111111001111111110100001010011011110000101111000111101111101100001111001100110001011110100111010001110000010001001010111010110000111001100110001101111000011101100010111101110010100101010100011011110001000010000101010010110001110111011111101111111001001110101110001110111110110100110110001000010010100101001011011010100111111000001100011001111010010011111010110101011111101000101111001010000100101001101100101000111110111100010001011110111001111111100110010010100111000111100100110111010011111010010101110001001000011001100011000001110100101011000001001101011111110111101111111011111010011001100101111000010110011000111101"
+ENCODED_LONG_MESSAGE = "0010000100101001010010110110000101111010000111000101111011110110000101010110001110010111000011011110000101010001100001001100111110100101100100001111001001011100100111111110111101111111001111111110100001010011011110000101111000111101111101100001111001100110001011110100111010001110000010001001010111010110000111001100110001101111000011101100010111101110010100101010100011011110001000010000101010010110001110111011111101111111001001110101110001110111110110100110110001000010010100101001011011010100111111000001100011001111010010011111010110101011111101000101111001010000100101001101100101000111110111100010001011110111001111111100110010010100111000111100100110111010011111010010101110001001000011001100011000001110100101011000001001101011111110111101111111011111010011001100101111000010110011000111101"
+
+SINGLE_CHAR_EDGE_CASE = "AAAAAAAAAAAAAAAA"
+ENCODED_SINGLE_CHAR_EDGE_CASE = "0000000000000000"
 
 
 class Node:
@@ -41,8 +44,10 @@ def generate_cipher_dfs(node: Node, path=''):
     if node.is_leaf_node():
         return [(node.get_label(), path)]
 
-    left_leaves = generate_cipher_dfs(node.left, path + '0') if node.left else [None]
-    right_leaves = generate_cipher_dfs(node.right, path + '1') if node.right else [None]
+    left_leaves = generate_cipher_dfs(
+        node.left, path + '0') if node.left else [None]
+    right_leaves = generate_cipher_dfs(
+        node.right, path + '1') if node.right else [None]
 
     return [x for x in left_leaves + right_leaves if x]
 
@@ -64,14 +69,19 @@ def huffman_encoding(data):
         heappush(character_heap, (total_frequency,
                  tiebreaker_index, internal_node))
 
-    _, _, tree = character_heap[0]
-    cipher = dict(generate_cipher_dfs(tree))
+    _, _, head = character_heap[0]
+
+    if head.is_leaf_node():
+        dummy_node = Node(None, head.frequency, head, None)
+        head = dummy_node
+
+    cipher = dict(generate_cipher_dfs(head))
 
     encoded = ''
     for char in data:
         encoded += cipher[char]
 
-    return encoded, tree
+    return encoded, head
 
 
 def huffman_decoding(data, tree: Node):
@@ -113,11 +123,16 @@ def empty_message():
 
 
 def large_message():
-    return huffman_encode_decode(LONG_MESSAGE, DECODED_LONG_MESSAGE)
+    return huffman_encode_decode(LONG_MESSAGE, ENCODED_LONG_MESSAGE)
+
+
+def single_character():
+    return huffman_encode_decode(SINGLE_CHAR_EDGE_CASE, ENCODED_SINGLE_CHAR_EDGE_CASE)
 
 
 if __name__ == "__main__":
-    print(huffman_encode_decode(MESSAGE, ENCODED))
+
+    print(huffman_encode_decode(MESSAGE, ENCODED), '\n\n')
     # The size of the data is: 74
     # The content of the data is: AAAAAAABBBCCCCCCCDDEEEEEE
 
@@ -128,9 +143,9 @@ if __name__ == "__main__":
     # The content of the encoded data is: AAAAAAABBBCCCCCCCDDEEEEEE
 
     # True
-    print(empty_message())
+    print(empty_message(), '\n\n')
     # True
-    print(large_message())
+    print(large_message(), '\n\n')
     # The size of the data is: 250
     # The content of the data is: iaculis at erat pellentesque adipiscing commodo elit at imperdiet dui accumsan sit amet nulla facilisi morbi tempus iaculis urna id volutpat lacus laoreet non curabitur gravida arcu ac tortor dignissim
 
@@ -139,5 +154,16 @@ if __name__ == "__main__":
 
     # The size of the decoded data is: 250
     # The content of the encoded data is: iaculis at erat pellentesque adipiscing commodo elit at imperdiet dui accumsan sit amet nulla facilisi morbi tempus iaculis urna id volutpat lacus laoreet non curabitur gravida arcu ac tortor dignissim
-    
+
     # True
+    print(single_character(), '\n\n')
+    # The size of the data is: 65
+    # The content of the data is: AAAAAAAAAAAAAAAA
+
+    # The size of the encoded data is: 24
+    # The content of the encoded data is: 0000000000000000
+
+    # The size of the decoded data is: 65
+    # The content of the encoded data is: AAAAAAAAAAAAAAAA
+
+    # True 
