@@ -69,30 +69,30 @@ def huffman_encoding(data):
         heappush(character_heap, (total_frequency,
                  tiebreaker_index, internal_node))
 
-    _, _, head = character_heap[0]
+    _, _, root = character_heap[0]
 
-    if head.is_leaf_node():
-        dummy_node = Node(None, head.frequency, head, None)
-        head = dummy_node
+    if root.is_leaf_node():
+        dummy_node = Node(None, root.frequency, root, None)
+        root = dummy_node
 
-    cipher = dict(generate_cipher_dfs(head))
+    cipher = dict(generate_cipher_dfs(root))
 
     encoded = ''
     for char in data:
         encoded += cipher[char]
 
-    return encoded, head
+    return encoded, root
 
 
 def huffman_decoding(data, tree: Node):
     decoded = ''
-    head = current_node = tree
+    root = current_node = tree
     for bit in data:
         current_node = current_node.get_left() if bit == '0' else current_node.get_right()
 
         if current_node.is_leaf_node():
             decoded += current_node.get_value()
-            current_node = head
+            current_node = root
 
     return decoded
 
